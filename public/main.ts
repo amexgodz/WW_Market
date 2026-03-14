@@ -19,11 +19,7 @@ const state: AppState = {
   authMode: 'login',
 };
 
-const appRoot = document.getElementById('app');
-
-if (!appRoot) {
-  throw new Error('Root element #app not found');
-}
+const appRoot = document.getElementById('app') as HTMLElement;
 
 function formatPrice(price: number): string {
   return `$ ${price.toFixed(2)}`;
@@ -418,21 +414,6 @@ function renderAuthModal(): HTMLElement | null {
   const form = document.createElement('form');
   form.className = 'auth-modal__form';
 
-  const loginField = document.createElement('div');
-  loginField.className = 'auth-modal__field';
-
-  const loginLabel = document.createElement('label');
-  loginLabel.className = 'auth-modal__label';
-  loginLabel.textContent = 'Логин';
-
-  const loginInput = document.createElement('input');
-  loginInput.className = 'auth-modal__input';
-  loginInput.type = 'text';
-  loginInput.required = true;
-
-  loginField.appendChild(loginLabel);
-  loginField.appendChild(loginInput);
-
   const passwordField = document.createElement('div');
   passwordField.className = 'auth-modal__field';
 
@@ -447,11 +428,27 @@ function renderAuthModal(): HTMLElement | null {
 
   passwordField.appendChild(passwordLabel);
   passwordField.appendChild(passwordInput);
+ 
+  const loginField = document.createElement('div');
+  loginField.className = 'auth-modal__field';
+ 
+  const loginLabel = document.createElement('label');
+  loginLabel.className = 'auth-modal__label';
+  loginLabel.textContent = 'Логин';
+ 
+  const loginInput = document.createElement('input');
+  loginInput.className = 'auth-modal__input';
+  loginInput.type = 'text';
+  loginInput.required = true;
+ 
+  loginField.appendChild(loginLabel);
+  loginField.appendChild(loginInput);
 
   let repeatPasswordInput: HTMLInputElement | null = null;
+  let repeatField: HTMLDivElement | null = null;
 
   if (state.authMode === 'register') {
-    const repeatField = document.createElement('div');
+    repeatField = document.createElement('div');
     repeatField.className = 'auth-modal__field';
 
     const repeatLabel = document.createElement('label');
@@ -465,7 +462,6 @@ function renderAuthModal(): HTMLElement | null {
 
     repeatField.appendChild(repeatLabel);
     repeatField.appendChild(repeatPasswordInput);
-    form.appendChild(repeatField);
   }
 
   const errorEl = document.createElement('div');
@@ -488,8 +484,13 @@ function renderAuthModal(): HTMLElement | null {
   actions.appendChild(submitBtn);
   actions.appendChild(closeBtn);
 
+  // Вход: Логин → Пароль
+  // Регистрация: Логин → Пароль → Повтор пароля
   form.appendChild(loginField);
   form.appendChild(passwordField);
+  if (repeatField) {
+    form.appendChild(repeatField);
+  }
   form.appendChild(errorEl);
   form.appendChild(actions);
 
@@ -578,6 +579,9 @@ function render(): void {
   }
 
   appRoot.appendChild(page);
+
+  // очищаем старое окно авторизации, если оно есть
+  document.querySelectorAll('.auth-modal-backdrop').forEach((el) => el.remove());
 
   const modal = renderAuthModal();
   if (modal) {

@@ -1,1 +1,62 @@
-﻿{"users": []}
+{
+  "users": [
+    {
+      "id": "60eadad9-3c2d-4a48-a581-3db28e0b0eea",
+      "login": "спарпасапс",
+      "password": "йцуфыв",
+      "balance": 1000,
+      "inventory": []
+    },
+    {
+      "id": "65ffcb3e-83c6-4610-a309-10e8077834a1",
+      "login": "йцук",
+      "password": "йцуфыв",
+      "balance": 1000,
+      "inventory": []
+    },
+    {
+      "id": "d9b5309f-fcfa-4a92-8357-894c3f5ddc53",
+      "login": "123",
+      "password": "123",
+      "balance": 1001230550,
+      "inventory": [
+        {
+          "id": "gloves-sport-1",
+          "name": "Sport Gloves | Omega",
+          "price": 320,
+          "rarity": "Ancient",
+          "wear": "Minimal Wear",
+          "image": "https://via.placeholder.com/400x250?text=Sport+Gloves+Omega",
+          "category": "Gloves"
+        },
+        {
+          "id": "ak-redline-1",
+          "name": "AK-47 | Redline",
+          "price": 120,
+          "rarity": "Rare",
+          "wear": "Field-Tested",
+          "image": "https://via.placeholder.com/400x250?text=AK-47+Redline",
+          "category": "Rifles"
+        },
+        {
+          "id": "ak-redline-1",
+          "name": "AK-47 | Redline",
+          "price": 120,
+          "rarity": "Rare",
+          "wear": "Field-Tested",
+          "image": "https://via.placeholder.com/400x250?text=AK-47+Redline",
+          "category": "Rifles"
+        },
+        {
+          "id": "ak-redline-1",
+          "name": "AK-47 | Redline",
+          "price": 120,
+          "rarity": "Rare",
+          "wear": "Field-Tested",
+          "image": "https://via.placeholder.com/400x250?text=AK-47+Redline",
+          "category": "Rifles"
+        }
+      ]
+    }
+  ]
+}

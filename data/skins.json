@@ -1,1 +1,29 @@
-﻿[]
+[
+  {
+    "id": "knife-doppler-1",
+    "name": "Knife | Doppler",
+    "price": 450.0,
+    "rarity": "Legendary",
+    "wear": "Factory New",
+    "image": "https://via.placeholder.com/400x250?text=Knife+Doppler",
+    "category": "Knives"
+  },
+  {
+    "id": "ak-redline-1",
+    "name": "AK-47 | Redline",
+    "price": 120.0,
+    "rarity": "Rare",
+    "wear": "Field-Tested",
+    "image": "https://via.placeholder.com/400x250?text=AK-47+Redline",
+    "category": "Rifles"
+  },
+  {
+    "id": "gloves-sport-1",
+    "name": "Sport Gloves | Omega",
+    "price": 320.0,
+    "rarity": "Ancient",
+    "wear": "Minimal Wear",
+    "image": "https://via.placeholder.com/400x250?text=Sport+Gloves+Omega",
+    "category": "Gloves"
+  }
+]

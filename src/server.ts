@@ -93,8 +93,7 @@ function authMiddleware(
     res.status(401).json({ message: 'Необходима авторизация' });
     return;
   }
-  // @ts-expect-error расширяем объект запроса для удобства
-  req.user = user;
+  (req as Request & { user: IUserRecord }).user = user;
   next();
 }
 
@@ -103,6 +102,7 @@ function authMiddleware(
 // GET /api/skins — просто отдача JSON скинов
 app.get('/api/skins', (_req: Request, res: Response) => {
   const skins = readJsonFile<ISkin[]>(skinsPath, []);
+  console.log('GET /api/skins -> using file:', skinsPath, 'items:', skins.length);
   res.json(skins);
 });
 
@@ -192,10 +192,96 @@ app.get('/api/me', (req: Request, res: Response) => {
   res.json(publicUser);
 });
 
+// POST /api/buy — покупка предмета
+app.post('/api/buy', authMiddleware, (req: Request, res: Response) => {
+  const { skinId } = req.body as { skinId?: string };
+
+  if (!skinId) {
+    res.status(400).json({ message: 'skinId обязателен' });
+    return;
+  }
+
+  const skins = readJsonFile<ISkin[]>(skinsPath, []);
+  const skin = skins.find((s) => s.id === skinId);
+
+  if (!skin) {
+    res.status(404).json({ message: 'Скин не найден' });
+    return;
+  }
+
+  const db = readJsonFile<IDatabase>(usersPath, { users: [] });
+
+  const currentUser: IUserRecord | undefined = db.users.find(
+    (u) => u.id === (req as Request & { user: IUserRecord }).user.id
+  );
+
+  if (!currentUser) {
+    res.status(401).json({ message: 'Пользователь не найден' });
+    return;
+  }
+
+  // Критическая проверка экономики: достаточно ли средств
+  if (currentUser.balance < skin.price) {
+    res.status(400).json({ message: 'Недостаточно средств' });
+    return;
+  }
+
+  currentUser.balance -= skin.price;
+  currentUser.inventory.push({ ...skin });
+
+  writeJsonFile<IDatabase>(usersPath, db);
+
+  const { password: _pwd, ...publicUser } = currentUser;
+  res.json(publicUser);
+});
+
+// POST /api/sell — продажа предмета по индексу в инвентаре
+app.post('/api/sell', authMiddleware, (req: Request, res: Response) => {
+  const { instanceId } = req.body as { instanceId?: number };
+
+  if (instanceId === undefined || instanceId === null) {
+    res.status(400).json({ message: 'instanceId обязателен' });
+    return;
+  }
+
+  const db = readJsonFile<IDatabase>(usersPath, { users: [] });
+
+  const currentUser: IUserRecord | undefined = db.users.find(
+    (u) => u.id === (req as Request & { user: IUserRecord }).user.id
+  );
+
+  if (!currentUser) {
+    res.status(401).json({ message: 'Пользователь не найден' });
+    return;
+  }
+
+  if (
+    instanceId < 0 ||
+    instanceId >= currentUser.inventory.length ||
+    !Number.isInteger(instanceId)
+  ) {
+    res.status(400).json({ message: 'Неверный идентификатор предмета' });
+    return;
+  }
+
+  const [soldItem] = currentUser.inventory.splice(instanceId, 1);
+
+  if (!soldItem) {
+    res.status(400).json({ message: 'Предмет не найден' });
+    return;
+  }
+
+  currentUser.balance += soldItem.price;
+
+  writeJsonFile<IDatabase>(usersPath, db);
+
+  const { password: _pwd, ...publicUser } = currentUser;
+  res.json(publicUser);
+});
+
 // Пример защищённого роута (если понадобится позже)
 app.get('/api/protected', authMiddleware, (req: Request, res: Response) => {
-  // @ts-expect-error user добавлен в мидлваре
-  const user: IUserRecord = req.user;
+  const user: IUserRecord = (req as Request & { user: IUserRecord }).user;
   res.json({ message: 'ok', login: user.login });
 });
 

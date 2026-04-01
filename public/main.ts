@@ -21,10 +21,21 @@ const state: AppState = {
 
 const appRoot = document.getElementById('app') as HTMLElement;
 
+/**
+ * Форматирует цену в вид "$ 0.00".
+ * @param {number} price
+ * @returns {string}
+ */
 function formatPrice(price: number): string {
   return `$ ${price.toFixed(2)}`;
 }
 
+/**
+ * Показывает всплывающее уведомление.
+ * @param {string} message
+ * @param {'success' | 'error'} [type='success']
+ * @returns {void}
+ */
 function showToast(message: string, type: 'success' | 'error' = 'success'): void {
   const existing = document.querySelector('.toast');
   if (existing) {
@@ -42,6 +53,13 @@ function showToast(message: string, type: 'success' | 'error' = 'success'): void
   }, 2400);
 }
 
+/**
+ * Универсальный fetch для API с обработкой ошибок.
+ * @template TResponse
+ * @param {RequestInfo} input
+ * @param {RequestInit} [init]
+ * @returns {Promise<TResponse>}
+ */
 async function apiFetch<TResponse>(input: RequestInfo, init?: RequestInit): Promise<TResponse> {
   const response = await fetch(input, {
     ...init,
@@ -68,23 +86,41 @@ async function apiFetch<TResponse>(input: RequestInfo, init?: RequestInit): Prom
   return (await response.json()) as TResponse;
 }
 
+/**
+ * Переключает текущий раздел приложения.
+ * @param {View} view
+ * @returns {void}
+ */
 function setView(view: View): void {
   state.currentView = view;
   window.history.pushState({ view }, '', view === 'market' ? '/' : '/profile');
   render();
 }
 
+/**
+ * Открывает модальное окно авторизации.
+ * @param {AuthMode} mode
+ * @returns {void}
+ */
 function openAuthModal(mode: AuthMode): void {
   state.authMode = mode;
   state.isAuthModalOpen = true;
   render();
 }
 
+/**
+ * Закрывает модальное окно авторизации.
+ * @returns {void}
+ */
 function closeAuthModal(): void {
   state.isAuthModalOpen = false;
   render();
 }
 
+/**
+ * Выход пользователя из аккаунта.
+ * @returns {void}
+ */
 function handleLogout(): void {
   state.currentUser = null;
   document.cookie = 'ww_session=; Max-Age=0; path=/';
@@ -92,6 +128,10 @@ function handleLogout(): void {
   render();
 }
 
+/**
+ * Создает верхнюю панель навигации.
+ * @returns {HTMLElement}
+ */
 function createNavbar(): HTMLElement {
   const nav = document.createElement('nav');
   nav.className = 'navbar';
@@ -175,6 +215,13 @@ function createNavbar(): HTMLElement {
   return nav;
 }
 
+/**
+ * Создает карточку скина для маркета или профиля.
+ * @param {ISkin} skin
+ * @param {boolean} isInProfile
+ * @param {number} [indexInInventory]
+ * @returns {HTMLElement}
+ */
 function createSkinCard(skin: ISkin, isInProfile: boolean, indexInInventory?: number): HTMLElement {
   const card = document.createElement('article');
   card.className = 'skin-card';
@@ -282,6 +329,11 @@ function createSkinCard(skin: ISkin, isInProfile: boolean, indexInInventory?: nu
   return card;
 }
 
+/**
+ * Отрисовывает главную страницу маркета.
+ * @param {HTMLElement} container
+ * @returns {void}
+ */
 function renderHome(container: HTMLElement): void {
   const header = document.createElement('div');
   header.className = 'page__header';
@@ -313,6 +365,11 @@ function renderHome(container: HTMLElement): void {
   container.appendChild(grid);
 }
 
+/**
+ * Отрисовывает страницу профиля пользователя.
+ * @param {HTMLElement} container
+ * @returns {void}
+ */
 function renderProfile(container: HTMLElement): void {
   const header = document.createElement('div');
   header.className = 'page__header';
@@ -365,6 +422,10 @@ function renderProfile(container: HTMLElement): void {
   container.appendChild(grid);
 }
 
+/**
+ * Создает модальное окно входа/регистрации.
+ * @returns {HTMLElement | null}
+ */
 function renderAuthModal(): HTMLElement | null {
   if (!state.isAuthModalOpen) {
     return null;
@@ -552,6 +613,10 @@ function renderAuthModal(): HTMLElement | null {
   return backdrop;
 }
 
+/**
+ * Обновляет текущего пользователя с сервера.
+ * @returns {Promise<void>}
+ */
 async function refreshCurrentUser(): Promise<void> {
   try {
     const user = await apiFetch<IUser>('/api/me');
@@ -563,6 +628,10 @@ async function refreshCurrentUser(): Promise<void> {
   }
 }
 
+/**
+ * Полностью перерисовывает приложение.
+ * @returns {void}
+ */
 function render(): void {
   appRoot.innerHTML = '';
 
@@ -589,6 +658,10 @@ function render(): void {
   }
 }
 
+/**
+ * Инициализирует приложение и первичную загрузку данных.
+ * @returns {Promise<void>}
+ */
 async function bootstrap(): Promise<void> {
   window.addEventListener('popstate', (event) => {
     const nextView = (event.state as { view?: View } | null)?.view ?? 'market';

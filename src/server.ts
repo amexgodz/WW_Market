@@ -20,6 +20,14 @@ if (!fs.existsSync(dataDir)) {
 }
 
 // Вспомогательные функции работы с файлами
+/**
+ * Читает JSON из файла и возвращает результат.
+ * Если файл отсутствует, пустой или с ошибкой, вернет defaultValue.
+ * @template T
+ * @param {string} filePath
+ * @param {T} defaultValue
+ * @returns {T}
+ */
 function readJsonFile<T>(filePath: string, defaultValue: T): T {
   try {
     if (!fs.existsSync(filePath)) {
@@ -36,6 +44,13 @@ function readJsonFile<T>(filePath: string, defaultValue: T): T {
   }
 }
 
+/**
+ * Записывает данные в JSON-файл.
+ * @template T
+ * @param {string} filePath
+ * @param {T} data
+ * @returns {void}
+ */
 function writeJsonFile<T>(filePath: string, data: T): void {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
 }
@@ -66,12 +81,22 @@ type SessionStore = Record<string, string>; // sessionId -> userId
 
 const sessionStore: SessionStore = {};
 
+/**
+ * Создает новую сессию для пользователя.
+ * @param {string} userId
+ * @returns {string}
+ */
 function createSession(userId: string): string {
   const sessionId = uuidv4();
   sessionStore[sessionId] = userId;
   return sessionId;
 }
 
+/**
+ * Возвращает пользователя по cookie-сессии из запроса.
+ * @param {Request} req
+ * @returns {IUserRecord | null}
+ */
 function getUserFromRequest(req: Request): IUserRecord | null {
   const sessionId = req.cookies?.[SESSION_COOKIE_NAME];
   if (!sessionId) return null;
@@ -83,6 +108,14 @@ function getUserFromRequest(req: Request): IUserRecord | null {
   return db.users.find((u) => u.id === userId) ?? null;
 }
 
+/**
+ * Проверяет авторизацию пользователя.
+ * Если сессии нет, возвращает 401.
+ * @param {Request} req
+ * @param {Response} res
+ * @param {NextFunction} next
+ * @returns {void}
+ */
 function authMiddleware(
   req: Request,
   res: Response,

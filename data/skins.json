@@ -1,1 +1,47 @@
-﻿[]
+[
+  {
+    "id": "063ece3f-7efe-4669-a566-44d1827935e4",
+    "name": "AK-47 | Redline",
+    "price": 220,
+    "rarity": "Rare",
+    "wear": "Field-Tested",
+    "image": "https://via.placeholder.com/300x160?text=AK-47",
+    "category": "Rifles",
+    "tags": [
+      "rifle",
+      "aggressive",
+      "red"
+    ],
+    "reviews": []
+  },
+  {
+    "id": "37ba84e6-33f7-48c6-806e-ae7468d30fc3",
+    "name": "AWP | Asiimov",
+    "price": 540,
+    "rarity": "Legendary",
+    "wear": "Battle-Scarred",
+    "image": "https://via.placeholder.com/300x160?text=AWP",
+    "category": "Snipers",
+    "tags": [
+      "sniper",
+      "orange",
+      "pro"
+    ],
+    "reviews": []
+  },
+  {
+    "id": "353483d2-a54a-40a2-909a-d2bb5d392c4f",
+    "name": "Glock-18 | Fade",
+    "price": 110,
+    "rarity": "Common",
+    "wear": "Factory New",
+    "image": "https://via.placeholder.com/300x160?text=Glock",
+    "category": "Pistols",
+    "tags": [
+      "pistol",
+      "bright",
+      "fast"
+    ],
+    "reviews": []
+  }
+]

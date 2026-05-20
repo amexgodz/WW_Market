@@ -1,1 +1,12 @@
-﻿{"users": []}
+{
+  "users": [
+    {
+      "id": "77ced154-b6d9-4288-9ac7-1ad80a983229",
+      "login": "owner",
+      "password": "owner123",
+      "balance": 5000,
+      "inventory": [],
+      "role": "admin"
+    }
+  ]
+}

@@ -7,7 +7,7 @@
     "build": "tsc && tsc --project tsconfig.frontend.json",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "start": "node dist/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run build && jest --runInBand",
     "build:frontend": "tsc --project tsconfig.frontend.json"
   },
   "keywords": [],
@@ -23,6 +23,8 @@
   "devDependencies": {
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
-    "typescript": "^5.9.3"
+    "jest": "^30.0.0",
+    "supertest": "^7.1.1",
+    "typescript": "^5.7.0"
   }
 }
